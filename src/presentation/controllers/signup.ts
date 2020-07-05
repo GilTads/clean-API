@@ -1,14 +1,17 @@
 import { HttpRequest, HttpResponse } from '../protocols/http'
 import { MissingPramError } from '../errors/missing-param-error'
 import { badRequest } from '../helpers/http-helper'
+import { Controller } from '../protocols/controller'
+let fieldToReturn: any
 
-export class SignupController {
+export class SignupController implements Controller {
   handle (httpRequest: HttpRequest): HttpResponse {
     const requiredFields = ['name', 'email']
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
-        return badRequest(new MissingPramError(field))
+        fieldToReturn = field
       }
     }
+    return badRequest(new MissingPramError(fieldToReturn))
   }
 }
