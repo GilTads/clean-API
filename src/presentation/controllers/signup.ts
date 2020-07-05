@@ -6,7 +6,7 @@ let fieldToReturn: any
 
 export class SignupController implements Controller {
   handle (httpRequest: HttpRequest): HttpResponse {
-    const requiredFields = ['name', 'email', 'password']
+    const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
         fieldToReturn = field
