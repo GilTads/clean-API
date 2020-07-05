@@ -1,6 +1,8 @@
 import { SignupController } from './signup'
 import { MissingPramError } from '../errors/missing-param-error'
 
+// sut = System Under Test
+
 const makeSut = (): SignupController => {
   return new SignupController()
 }
