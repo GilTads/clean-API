@@ -4,7 +4,7 @@ import { badRequest } from '../helpers/http-helper'
 import { Controller } from '../protocols/controller'
 import { EmailValidator } from '../protocols/email-validator'
 import { InvalidPramError } from '../errors/invalid-param-error'
-let fieldToReturn: any
+import { UndefinedParamError } from '../errors/undefined-param-error'
 
 export class SignupController implements Controller {
   private readonly emailValidator: EmailValidator
@@ -15,16 +15,15 @@ export class SignupController implements Controller {
 
   handle (httpRequest: HttpRequest): HttpResponse {
     const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
-    const isValid = this.emailValidator.isValid(httpRequest.body.email)
     for (const field of requiredFields) {
       if (!httpRequest.body[field]) {
-        console.log('Entrou aqui')
-        fieldToReturn = field
+        return badRequest(new MissingPramError(field))
       }
+      const isValid = this.emailValidator.isValid(httpRequest.body.email)
       if (!isValid) {
         return badRequest(new InvalidPramError('email'))
       }
     }
-    return badRequest(new MissingPramError(fieldToReturn))
+    return badRequest(new UndefinedParamError('Pane no sistema'))
   }
 }
