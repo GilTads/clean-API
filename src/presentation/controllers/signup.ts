@@ -1,7 +1,6 @@
-import { HttpRequest, HttpResponse } from '../protocols/http'
+import { HttpRequest, HttpResponse, Controller } from '../protocols'
 import { MissingPramError, InvalidPramError } from '../errors'
 import { badRequest, serverError } from '../helpers/http-helper'
-import { Controller } from '../protocols/controller'
 import { EmailValidator } from '../protocols/email-validator'
 
 export class SignupController implements Controller {
