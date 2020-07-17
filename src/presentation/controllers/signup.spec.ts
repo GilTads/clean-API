@@ -15,6 +15,20 @@ const makeEmailValidator = (): EmailValidator => {
   }
   return new EmailValidatorStub()
 }
+const makeAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    isValid (account: AddAccountModel): AccountModel {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email@email.com',
+        password: 'valid_password'
+      }
+      return fakeAccount
+    }
+  }
+  return new AddAccountStub()
+}
 
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator()
@@ -127,6 +141,21 @@ describe('Signup Controller', () => {
     sut.handle(httpRequest)
     expect(isValidSpy).toBeCalledWith('any_email@email.com')
   })
+  test('should call EmailValidator with correct email', () => {
+    const { sut, emailValidatorStub } = makeSut()
+    const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    sut.handle(httpRequest)
+    expect(isValidSpy).toBeCalledWith('any_email@email.com')
+  })
   test('should return 500 if EmailValidator throws', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockImplementationOnce(() => {
@@ -143,5 +172,25 @@ describe('Signup Controller', () => {
     const httpResponse = sut.handle(httpRequest)
     expect(httpResponse?.statusCode).toBe(500)
     expect(httpResponse?.body).toEqual(new ServerError())
+  })
+})
+
+test('should call AddAccount with correct values', () => {
+  const { sut, addAccountStub } = makeSut()
+  const addSpy = jest.spyOn(addAccountStub, 'add')
+
+  const httpRequest = {
+    body: {
+      name: 'any_name',
+      email: 'any_email@email.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password'
+    }
+  }
+  sut.handle(httpRequest)
+  expect(addSpy).toBeCalledWith({
+    name: 'any_name',
+    email: 'any_email@email.com',
+    password: 'any_password'
   })
 })
