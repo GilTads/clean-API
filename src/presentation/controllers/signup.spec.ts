@@ -82,6 +82,20 @@ describe('Signup Controller', () => {
     expect(httpResponse?.statusCode).toBe(400)
     expect(httpResponse?.body).toEqual(new MissingPramError('passwordConfirmation'))
   })
+  test('should return 400 if passwordConfirmation fails', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@email.com',
+        password: 'invalid_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse?.statusCode).toBe(400)
+    expect(httpResponse?.body).toEqual(new InvalidPramError('passwordConfirmation'))
+  })
   test('should return 400 if an ivalid email is provided', () => {
     const { sut, emailValidatorStub } = makeSut()
     jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false)
@@ -98,7 +112,7 @@ describe('Signup Controller', () => {
     expect(httpResponse?.statusCode).toBe(400)
     expect(httpResponse?.body).toEqual(new InvalidPramError('email'))
   })
-  test('should call EmailValidator with correc email', () => {
+  test('should call EmailValidator with correct email', () => {
     const { sut, emailValidatorStub } = makeSut()
     const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
 
