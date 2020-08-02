@@ -1,14 +1,13 @@
 import { HttpRequest, HttpResponse, Controller } from '../protocols'
 import { MissingPramError, InvalidPramError } from '../errors'
 import { badRequest, serverError } from '../helpers/http-helper'
-import { EmailValidator } from '../protocols/email-validator'
+import { EmailValidator } from '../protocols/'
 
 export class SignupController implements Controller {
-  private readonly emailValidator: EmailValidator
 
-  constructor (emailValidator: EmailValidator) {
-    this.emailValidator = emailValidator
-  }
+  constructor (
+    private readonly emailValidator: EmailValidator
+  ) {}
 
   handle (httpRequest: HttpRequest): HttpResponse | undefined {
     try {
