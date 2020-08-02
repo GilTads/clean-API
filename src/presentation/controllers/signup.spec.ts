@@ -12,7 +12,7 @@ interface SutTypes {
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
+    isValid (_email: string): boolean {
       return true
     }
   }
@@ -20,10 +20,11 @@ const makeEmailValidator = (): EmailValidator => {
 }
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    add(account: AddAccountModel): AccountModel {
-      throw new Error("Method not implemented.")
+    add (_account: AddAccountModel): AccountModel {
+      throw new Error('Method not implemented.')
     }
-    isValid (account: AddAccountModel): AccountModel {
+
+    isValid (_account: AddAccountModel): AccountModel {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -37,7 +38,7 @@ const makeAddAccount = (): AddAccount => {
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator();
+  const emailValidatorStub = makeEmailValidator()
   const addAccountStub = makeAddAccount()
   const sut = new SignupController(emailValidatorStub)
   return {
