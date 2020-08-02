@@ -1,7 +1,10 @@
 import { SignupController } from './signup'
 import { MissingPramError, InvalidPramError, ServerError } from '../errors'
 import { EmailValidator } from '../protocols'
+import { AddAccount, AddAccountModel } from '../../domain/usecases/add-account'
+import { AccountModel } from '../../domain/models/account'
 
+// sut = System Under Test
 interface SutTypes {
   sut: SignupController,
   emailValidatorStub: EmailValidator
@@ -17,6 +20,9 @@ const makeEmailValidator = (): EmailValidator => {
 }
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
+    add(account: AddAccountModel): AccountModel {
+      throw new Error("Method not implemented.")
+    }
     isValid (account: AddAccountModel): AccountModel {
       const fakeAccount = {
         id: 'valid_id',
@@ -31,8 +37,8 @@ const makeAddAccount = (): AddAccount => {
 }
 
 const makeSut = (): SutTypes => {
-  const emailValidatorStub = makeEmailValidator()
-  // sut = System Under Test
+  const emailValidatorStub = makeEmailValidator();
+  const addAccountStub = makeAddAccount()
   const sut = new SignupController(emailValidatorStub)
   return {
     sut,
