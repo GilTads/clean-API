@@ -1,6 +1,6 @@
 import { HttpRequest, HttpResponse, Controller, AddAccount, EmailValidator } from './signup-protocols'
 import { MissingPramError, InvalidPramError } from '../../errors'
-import { badRequest, serverError } from '../../helpers/http-helper'
+import { badRequest, serverError, ok } from '../../helpers/http-helper'
 
 export class SignupController implements Controller {
   constructor (
@@ -8,7 +8,7 @@ export class SignupController implements Controller {
     private readonly addAccount: AddAccount
   ) {}
 
-  handle (httpRequest: HttpRequest): HttpResponse | undefined {
+  handle (httpRequest: HttpRequest): HttpResponse {
     try {
       const requiredFields = ['name', 'email', 'password', 'passwordConfirmation']
       for (const field of requiredFields) {
@@ -24,11 +24,12 @@ export class SignupController implements Controller {
       if (!isValid) {
         return badRequest(new InvalidPramError('email'))
       }
-      this.addAccount.add({
+      const account = this.addAccount.add({
         name,
         email,
         password
       })
+      return ok(account)
     } catch (error) {
       return serverError()
     }

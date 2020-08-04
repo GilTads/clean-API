@@ -2,7 +2,7 @@
   "name": "clean-node-api",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest"
+    "test": "jest --watch"
   },
   "license": "MIT",
   "devDependencies": {
